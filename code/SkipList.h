@@ -2,12 +2,16 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 using namespace std;
 
 struct SkipNode {
     int data; // value of this node
-    vector<SkipNode>* forward; // vector of pointers at different levels, null if last node in the list
+    vector<SkipNode*> forward; // vector of pointers at different levels, null if last node in the list
+
+    // Simple constructor (still working on understanding this)
+    SkipNode(int d, int level);
 };
 
 class SkipList {
@@ -15,7 +19,7 @@ public:
     SkipList(); // Constructor
     ~SkipList(); // Deconstructor
 
-    // Creates a new SkipNode struct from heap and. Stores the passed integer and
+    // Creates a new SkipNode struct from heap. Stores the passed integer and
     // all forward pointers point to null.
     // Returns a pointer to the new SkipNode. 
     SkipNode* init_SkipNode(int data, int level);
@@ -24,16 +28,16 @@ public:
     // Returns true if finished successfully
     bool insert(int data);
 
-    // Find if a value exists
+    // Find location of value in SkipList.
     // Returns node address of data, null otherwise
     SkipNode* find(int data);
 
-    // Removes the node indicated by the given data and frees the memory
+    // Removes the node indicated by the given data and frees up the memory.
     // If an invalid offset is given, the function returns false and has no effect.
     // Returns true if successful, false otherwise
     bool remove(int data);
 
-    // Prints all levels of the skip list starting with the highest level.
+    // Prints all levels of the Skip List starting with the highest level.
     // No return value.
     void display();
 
