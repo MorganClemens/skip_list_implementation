@@ -5,6 +5,10 @@
 
 using namespace std;
 
+// @@@ I used AI to generate this test file and take no credit for the unit tests built here.
+// @@@ I wanted to experiment with unit tests just to see how they're built and run
+// @@@ although that was beyond the scope of this project.
+
 class LinkedListTest : public ::testing::Test {
 protected:
     void SetUp() override {
