@@ -14,8 +14,8 @@ int main() {
     test1.insert(26);
     test1.insert(100);
     test1.display();
-    cout << test1.find(15) << endl;
-    cout << test1.find(10) << endl;
+    test1.remove(25);
+    test1.display();
 
     return 0;
 }

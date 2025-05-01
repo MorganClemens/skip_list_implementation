@@ -104,38 +104,33 @@ bool SkipList::remove(int data) {
             // Allows us to move to the right and down in one loop
             current = current->forward[i];
         }
-        update[i] = current; // record last node before insert (to be updated later)
+        update[i] = current; // record last node before removal (to be updated later)
     }
 
-    // Exception: duplicate node exists (not allowed)
-    SkipNode* next = current->forward[0]; // record next node
-    if (next != nullptr && next->data == data) {
-        return false; // no duplicate insertion
+    // Exception: node is not in list
+    SkipNode* target = current->forward[0];
+    if (target == nullptr || target->data != data) {
+        return false; // not found
     }
 
-    // Generate and update head levels
-    int new_level = randomLevel();
-
-    if (new_level > current_level) {
-        for (int i = current_level; i < new_level; i++) {
-            update[i] = head; // queue head to be updated
+    // Bypass target node in all levels where it exists
+    for (int i = 0; i < target->node_level; i++) {
+        if (update[i]->forward[i] == target) {
+            update[i]->forward[i] = target->forward[i];
         }
-        current_level = new_level;
     }
 
-    // Build node
-    SkipNode* new_node = init_SkipNode(data, new_level);
+    // Delete node from memory
+    delete target;
 
-    // Insert and update
-    for (int i = 0; i < new_level; i++) {
-        new_node->forward[i] = update[i]->forward[i];
-        update[i]->forward[i] = new_node;
+    // Adjust current level (if needed)
+    // Finds at which levels current_level points to nothing 
+    // (Means deleted node was highest level node)
+    while (current_level > 0 && head->forward[current_level] - 1 == nullptr) {
+        current_level--;
     }
 
     return true;
-
-    
-    return false;
 }
 
 // Prints all levels of Skip List starting with the highest level.
