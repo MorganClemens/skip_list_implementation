@@ -1,10 +1,11 @@
 #include "SkipList.h"
-
-#include <cstdlib> // For rand()
+#include <iostream>
+#include <random> // For random number generation
 
 // SkipNode constructor
 SkipNode::SkipNode(int d, int level) {
     data = d;
+    node_level = level;
     forward = vector<SkipNode*>(level, nullptr); 
 }
 
@@ -24,37 +25,94 @@ SkipList::~SkipList() {
 }
 
 // Create new SkipNode struct from heap memory.
-SkipNode* init_SkipNode(int data, int level) {
+SkipNode* SkipList::init_SkipNode(int data, int level) {
     SkipNode* node = new SkipNode(data, level);
     return node;
 }
 
 // Insert a value into the skip list (Handle random level).
-bool insert(int data) {
+bool SkipList::insert(int data) {
+    std::vector<SkipNode*> update(max_level, nullptr); // track nodes we'll need to update later
+    SkipNode* current = head;
 
-    // TODO
+    // Traverse list and record update points
+    for (int i = current_level - 1; i >= 0; i--) {
+        while (current->forward[i] != nullptr && current->forward[i]->data < data) {
+            // Allows us to move to the right and down in one loop
+            current = current->forward[i];
+        }
+        update[i] = current; // record last node before insert (to be updated later)
+    }
+
+    // Exception: duplicate node exists (not allowed)
+    SkipNode* next = current->forward[0]; // record next node
+    if (next != nullptr && next->data == data) {
+        return false; // no duplicate insertion
+    }
+
+    // Generate and update head levels
+    int new_level = randomLevel();
+
+    if (new_level > current_level) {
+        for (int i = current_level; i < new_level; i++) {
+            update[i] = head; // queue head to be updated
+        }
+        current_level = new_level;
+    }
+
+    // Build node
+    SkipNode* new_node = init_SkipNode(data, new_level);
+
+    // Insert and update
+    for (int i = 0; i < new_level; i++) {
+        new_node->forward[i] = update[i]->forward[i];
+        update[i]->forward[i] = new_node;
+    }
+
+    return true;
 }
 
 // Find location of value in SkipList.
-SkipNode* find(int data) {
+SkipNode* SkipList::find(int data) {
 
-    // TODO
+    
+
+    return nullptr;
 }
 
 // Removes the node indicated by the given data and frees up memory.
-bool remove(int data) {
+bool SkipList::remove(int data) {
 
     // TODO
+    return false;
 }
 
 // Prints all levels of Skip List starting with the highest level.
-void display() {
-
-    // TODO
+void SkipList::display() {
+    cout << "\n_______ Skip List _______\n";
+    // Traverse and print
+    for (int i = current_level -1; i >= 0; i--) {
+        SkipNode* current = head->forward[i]; // reset head after breaking from while loop
+        cout << "Level " << i + 1 << ": ";
+        while (current != nullptr) {
+            cout << current->data << " -> ";
+            current = current->forward[i];
+        }
+        cout << "nullptr" << endl; // breaking from while loop means we found a nullptr
+    }
 }
 
 // Randomly decides the height of new nodes.
-int randomLevel() {
+int SkipList::randomLevel() {
+    // Random number generation
+    std::random_device rd;     // Non-deterministic seed
+    std::mt19937 gen(rd());    // Mersenne Twister engine
+    std::uniform_real_distribution<> dist(0.0, 1.0); // From 0-1
 
-    // TODO
+    int level = 1; 
+    while (dist(gen) < probability && level < max_level) {
+        level++;
+    }
+
+    return level;
 }

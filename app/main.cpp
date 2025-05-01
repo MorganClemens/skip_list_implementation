@@ -4,9 +4,16 @@
 using namespace std;
 
 int main() {
-    // In the future, you could create and use a SkipList object here
-    // SkipList<int> list;
-    // list.insert(42);
+    // Test the functions here
+
+    // Debug randomLevel
+    SkipList test1;
+    test1.insert(25);
+    test1.insert(34);
+    test1.insert(15);
+    test1.insert(26);
+    test1.insert(100);
+    test1.display();
 
     return 0;
 }

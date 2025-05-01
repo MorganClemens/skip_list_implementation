@@ -8,6 +8,7 @@ using namespace std;
 
 struct SkipNode {
     int data; // value of this node
+    int node_level; // level of this node
     vector<SkipNode*> forward; // vector of pointers at different levels, null if last node in the list
 
     // Simple constructor (still working on understanding this)
