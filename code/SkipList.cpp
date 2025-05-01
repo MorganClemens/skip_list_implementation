@@ -21,12 +21,13 @@ SkipList::SkipList() {
 // Deconstructor properly walks and deletes nodes at each level.
 // (Would just deleting the base level work?).
 SkipList::~SkipList() {
-    SkipNode* current = head;
+    SkipNode* current = head->forward[0];  // Start with the first node after the head.
     while (current != nullptr) {
         SkipNode* next = current->forward[0]; // follow level 0
-        delete current;
-        current = next;
+        delete current;  // Delete current node
+        current = next;  // Move to the next node
     }
+    delete head;  // Now delete the head node after cleaning up the list.
 }
 
 // Create new SkipNode struct from heap memory.
