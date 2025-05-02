@@ -4,10 +4,9 @@
 using namespace std;
 
 int main() {
-    // Test the functions here
-
-    // Debug randomLevel
-    SkipList* test1 = new SkipList();
+    
+    // DEMO
+    SkipList* test1 = new SkipList(); // New object
     test1->insert(25);
     test1->insert(34);
     test1->insert(15);
@@ -17,8 +16,7 @@ int main() {
     test1->remove(25);
     test1->display();
 
-    
-    delete test1;
+    delete test1; // Free memory
 
     return 0;
 }
